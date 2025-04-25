@@ -1,146 +1,102 @@
-                                                       
+mysql> use cars_database;
+Database changed
 
-CREATE DATABASE IF NOT EXISTS cars_database;
-USE cars_database;
-CREATE TABLE IF NOT EXISTS users (
-  id INT AUTO_INCREMENT,
-  name VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  gsm CHAR(10),
-  PRIMARY KEY (id));
-mysql> CREATE TABLE IF NOT EXISTS cars (id INT AUTO_INCREMENT,
-    -> name VARCHAR(255) NOT NULL,
-    -> manufacturer VARCHAR(255) NOT NULL,
-    -> production_year INT NOT NULL,
-    -> engine_type VARCHAR(255) NOT NULL,
-    -> price DECIMAL(10, 2) NOT NULL,
-    -> description TEXT,
-    -> PRIMARY KEY (id));
+CREATE TABLE users(
+   id INT,
+   name VARCHAR(50) NOT NULL,
+   email VARCHAR(50) NOT NULL,
+   password VARCHAR(50) NOT NULL,
+   PRIMARY KEY(id)
+);
 
-mysql> CREATE TABLE IF NOT EXISTS sale_ads (id INT AUTO_INCREMENT,
-    -> user_id INT NOT NULL,
-    -> car_id INT NOT NULL,
-    -> price DECIMAL(10, 2) NOT NULL,
-    -> car_condition VARCHAR(255) NOT NULL,
-    -> created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    -> PRIMARY KEY (id),
-    -> FOREIGN KEY (user_id) REFERENCES users(id),
-    -> FOREIGN KEY (car_id) REFERENCES cars(id) );
-mysql> CREATE TABLE IF NOT EXISTS purchase_requests (id INT AUTO_INCREMENT,
-    -> user_id INT NOT NULL,
-    -> car_id INT NOT NULL,
-    -> created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    -> PRIMARY KEY (id),
-    -> FOREIGN KEY (user_id) REFERENCES users(id),
-    -> FOREIGN KEY (car_id) REFERENCES cars(id) );
-mysql> CREATE TABLE IF NOT EXISTS user_comments (id INT AUTO_INCREMENT,
-    -> user_id INT NOT NULL,
-    -> car_id INT NOT NULL,
-    -> comment TEXT NOT NULL,
-    -> created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    -> PRIMARY KEY (id),
-    -> FOREIGN KEY (user_id) REFERENCES users(id),
-    -> FOREIGN KEY (car_id) REFERENCES cars(id) );
-mysql> CREATE TABLE IF NOT EXISTS car_images (id INT AUTO_INCREMENT,
-    -> car_id INT NOT NULL,
-    -> image_url VARCHAR(255) NOT NULL,
-    -> PRIMARY KEY (id),
-    -> FOREIGN KEY (car_id) REFERENCES cars(id));
-mysql> CREATE TABLE IF NOT EXISTS car_additional_info (id INT AUTO_INCREMENT,
-    -> car_id INT NOT NULL,
-    -> technical_specs TEXT,
-    -> description TEXT,
-    -> PRIMARY KEY (id),
-    -> FOREIGN KEY (car_id) REFERENCES cars(id));
+CREATE TABLE car_additional_info(
+   id INT,
+   car_id INT NOT NULL,
+   technical_specs TEXT,
+   description TEXT,
+   PRIMARY KEY(id)
+);
 
+CREATE TABLE cars(
+   id INT,
+   name VARCHAR(50) NOT NULL,
+   manufacturer VARCHAR(50) NOT NULL,
+   production_year INT NOT NULL,
+   engine_type VARCHAR(50),
+   price DECIMAL(10,2) NOT NULL,
+   description TEXT,
+   id_1 INT NOT NULL,
+   PRIMARY KEY(id),
+   UNIQUE(id_1),
+   FOREIGN KEY(id_1) REFERENCES car_additional_info(id)
+);
 
+CREATE TABLE purchase_requests(
+   id INT,
+   user_id INT NOT NULL,
+   car_id INT NOT NULL,
+   created_at DATE,
+   id_1 INT,
+   id_2 INT,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_1) REFERENCES cars(id),
+   FOREIGN KEY(id_2) REFERENCES users(id)
+);
 
-mysql> desc users;
-+----------+--------------+------+-----+---------+----------------+
-| Field    | Type         | Null | Key | Default | Extra          |
-+----------+--------------+------+-----+---------+----------------+
-| id       | int          | NO   | PRI | NULL    | auto_increment |
-| name     | varchar(255) | NO   |     | NULL    |                |
-| email    | varchar(255) | NO   |     | NULL    |                |
-| password | varchar(255) | NO   |     | NULL    |                |
-| gsm      | int          | YES  |     | NULL    |                |
-+----------+--------------+------+-----+---------+----------------+
-5 rows in set (0.00 sec)
+CREATE TABLE sale_ads(
+   id INT,
+   user_id INT NOT NULL,
+   car_id INT NOT NULL,
+   price DECIMAL(10,2) NOT NULL,
+   car_condition VARCHAR(50) NOT NULL,
+   created_at DATE,
+   id_1 INT,
+   id_2 INT,
+   PRIMARY KEY(id),
+   UNIQUE(user_id),
+   UNIQUE(car_id),
+   UNIQUE(created_at),
+   FOREIGN KEY(id_1) REFERENCES cars(id),
+   FOREIGN KEY(id_2) REFERENCES users(id)
+);
 
-mysql> desc cars;
-+-----------------+---------------+------+-----+---------+----------------+
-| Field           | Type          | Null | Key | Default | Extra          |
-+-----------------+---------------+------+-----+---------+----------------+
-| id              | int           | NO   | PRI | NULL    | auto_increment |
-| name            | varchar(255)  | NO   |     | NULL    |                |
-| manufacturer    | varchar(255)  | NO   |     | NULL    |                |
-| production_year | int           | NO   |     | NULL    |                |
-| engine_type     | varchar(255)  | NO   |     | NULL    |                |
-| price           | decimal(10,2) | NO   |     | NULL    |                |
-| description     | text          | YES  |     | NULL    |                |
-+-----------------+---------------+------+-----+---------+----------------+
+CREATE TABLE user_comments(
+   id INT,
+   user_id INT NOT NULL,
+   car_id INT NOT NULL,
+   comment VARCHAR(50) NOT NULL,
+   created_at DATE,
+   id_1 INT,
+   id_2 INT,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_1) REFERENCES cars(id),
+   FOREIGN KEY(id_2) REFERENCES users(id)
+);
+
+CREATE TABLE car_images(
+   id INT,
+   car_id INT,
+   image_url VARCHAR(255) NOT NULL,
+   id_1 INT,
+   PRIMARY KEY(id),
+   UNIQUE(car_id),
+   FOREIGN KEY(id_1) REFERENCES cars(id)
+);
+__________________________________________________________________________________________________________________________________________________________
+
+mysql> show tables;
++-------------------------+
+| Tables_in_cars_database |
++-------------------------+
+| car_additional_info     |
+| car_images              |
+| cars                    |
+| purchase_requests       |
+| sale_ads                |
+| user_comments           |
+| users                   |
++-------------------------+
 7 rows in set (0.00 sec)
-
-mysql> desc sale_ads;
-+---------------+---------------+------+-----+-------------------+-------------------+
-| Field         | Type          | Null | Key | Default           | Extra
-       |
-+---------------+---------------+------+-----+-------------------+-------------------+
-| id            | int           | NO   | PRI | NULL              | auto_increment    |
-| user_id       | int           | NO   | MUL | NULL              |
-       |
-| car_id        | int           | NO   | MUL | NULL              |
-       |
-| price         | decimal(10,2) | NO   |     | NULL              |
-       |
-| car_condition | varchar(255)  | NO   |     | NULL              |
-       |
-| created_at    | timestamp     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
-+---------------+---------------+------+-----+-------------------+-------------------+
-6 rows in set (0.01 sec)
-
-mysql> desc purchase_requests;
-+------------+-----------+------+-----+-------------------+-------------------+
-| Field      | Type      | Null | Key | Default           | Extra
-|
-+------------+-----------+------+-----+-------------------+-------------------+
-| id         | int       | NO   | PRI | NULL              | auto_increment
-|
-| user_id    | int       | NO   | MUL | NULL              |
-|
-| car_id     | int       | NO   | MUL | NULL              |
-|
-| created_at | timestamp | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
-+------------+-----------+------+-----+-------------------+-------------------+
-4 rows in set (0.01 sec)
-
-mysql> desc user_comments;
-+------------+-----------+------+-----+-------------------+-------------------+
-| Field      | Type      | Null | Key | Default           | Extra
-|
-+------------+-----------+------+-----+-------------------+-------------------+
-| id         | int       | NO   | PRI | NULL              | auto_increment
-|
-| user_id    | int       | NO   | MUL | NULL              |
-|
-| car_id     | int       | NO   | MUL | NULL              |
-|
-| comment    | text      | NO   |     | NULL              |
-|
-| created_at | timestamp | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
-+------------+-----------+------+-----+-------------------+-------------------+
-5 rows in set (0.00 sec)
-
-mysql> desc car_images;
-+-----------+--------------+------+-----+---------+----------------+
-| Field     | Type         | Null | Key | Default | Extra          |
-+-----------+--------------+------+-----+---------+----------------+
-| id        | int          | NO   | PRI | NULL    | auto_increment |
-| car_id    | int          | NO   | MUL | NULL    |                |
-| image_url | varchar(255) | NO   |     | NULL    |                |
-+-----------+--------------+------+-----+---------+----------------+
-3 rows in set (0.00 sec)
 
 mysql> desc car_additional_info;
 +-----------------+------+------+-----+---------+----------------+
@@ -151,4 +107,88 @@ mysql> desc car_additional_info;
 | technical_specs | text | YES  |     | NULL    |                |
 | description     | text | YES  |     | NULL    |                |
 +-----------------+------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+
+mysql> desc  car_images;
++-----------+--------------+------+-----+---------+----------------+
+| Field     | Type         | Null | Key | Default | Extra          |
++-----------+--------------+------+-----+---------+----------------+
+| id        | int          | NO   | PRI | NULL    | auto_increment |
+| car_id    | int          | NO   | MUL | NULL    |                |
+| image_url | varchar(255) | NO   |     | NULL    |                |
++-----------+--------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> desc cars;
++-----------------+---------------+------+-----+---------+----------------+
+| Field           | Type          | Null | Key | Default | Extra          |
++-----------------+---------------+------+-----+---------+----------------+
+| id              | int           | NO   | PRI | NULL    | auto_increment |
+| name            | varchar(50)   | NO   |     | NULL    |                |
+| manufacturer    | varchar(50)   | NO   |     | NULL    |                |
+| production_year | int           | NO   |     | NULL    |                |
+| engine_type     | varchar(50)   | NO   |     | NULL    |                |
+| price           | decimal(10,2) | NO   |     | NULL    |                |
+| description     | text          | YES  |     | NULL    |                |
++-----------------+---------------+------+-----+---------+----------------+
+7 rows in set (0.00 sec)
+
+mysql> desc purchase_requests;
++------------+-----------+------+-----+-------------------+-------------------+
+| Field      | Type      | Null | Key | Default           | Extra             |
++------------+-----------+------+-----+-------------------+-------------------+
+| id         | int       | NO   | PRI | NULL              | auto_increment    |
+| user_id    | int       | NO   | MUL | NULL              |                   |
+| car_id     | int       | NO   | MUL | NULL              |                   |
+| created_at | timestamp | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++------------+-----------+------+-----+-------------------+-------------------+
 4 rows in set (0.00 sec)
+
+mysql> desc sale_ads;
++---------------+---------------+------+-----+-------------------+-------------------+
+| Field         | Type          | Null | Key | Default           | Extra             |
++---------------+---------------+------+-----+-------------------+-------------------+
+| id            | int           | NO   | PRI | NULL              | auto_increment    |
+| user_id       | int           | NO   | MUL | NULL              |                   |
+| car_id        | int           | NO   | MUL | NULL              |                   |
+| price         | decimal(10,2) | NO   |     | NULL              |                   |
+| car_condition | varchar(50)   | NO   |     | NULL              |                   |
+| created_at    | timestamp     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++---------------+---------------+------+-----+-------------------+-------------------+
+6 rows in set (0.00 sec)
+
+mysql> desc user_comments;
++------------+-----------+------+-----+-------------------+-------------------+
+| Field      | Type      | Null | Key | Default           | Extra             |
++------------+-----------+------+-----+-------------------+-------------------+
+| id         | int       | NO   | PRI | NULL              | auto_increment    |
+| user_id    | int       | NO   | MUL | NULL              |                   |
+| car_id     | int       | NO   | MUL | NULL              |                   |
+| comment    | text      | NO   |     | NULL              |                   |
+| created_at | timestamp | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++------------+-----------+------+-----+-------------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> desc users.
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> desc users;
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| id       | int         | NO   | PRI | NULL    | auto_increment |
+| username | varchar(50) | NO   |     | NULL    |                |
+| email    | varchar(50) | NO   |     | NULL    |                |
+| password | varchar(50) | NO   |     | NULL    |                |
++----------+-------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+6
+
+
+- Utilisateurs (users)
+- Voitures (cars)
+- Annonces de vente (sale_ads)
+- Offres d'achat (purchase_requests)
+-  Commentaires des utilisateurs (user_comments)
+-  Photos des voitures (car_images)
+

@@ -1,0 +1,19 @@
+                                                        gineration de teste BD
+
+
+
+//vidage des tables
+
+USE cars_database;  SET FOREIGN_KEY_CHECKS = 0;  TRUNCATE TABLE car_additional_info; TRUNCATE TABLE car_images; TRUNCATE TABLE user_comments; TRUNCATE TABLE purchase_requests; TRUNCATE TABLE sale_ads; TRUNCATE TABLE cars; TRUNCATE TABLE users;  SET FOREIGN_KEY_CHECKS = 1;
+
+//verificatin
+
+ USE cars_database;  SET FOREIGN_KEY_CHECKS = 0;  ALTER TABLE car_additional_info AUTO_INCREMENT = 1; ALTER TABLE car_images AUTO_INCREMENT = 1; ALTER TABLE user_comments AUTO_INCREMENT = 1; ALTER TABLE purchase_requests AUTO_INCREMENT = 1; ALTER TABLE sale_ads AUTO_INCREMENT = 1; ALTER TABLE cars AUTO_INCREMENT = 1; ALTER TABLE users AUTO_INCREMENT = 1;  SET FOREIGN_KEY_CHECKS = 1;
+
+//teste
+
+ SELECT * FROM users; SELECT * FROM cars; SELECT * FROM sale_ads; SELECT * FROM purchase_requests; SELECT * FROM user_comments; SELECT * FROM car_images; SELECT * FROM car_additional_info;
+
+//exeucuter
+
+INSERT INTO users (name, email, password, gsm) VALUES ('Ali Mohamed', 'ali@example.com', 'hashed_password1', '0612345678'), ('Sophie Martin', 'sophie@example.com', 'hashed_password2', '0698765432'), ('Jean Dupont', 'jean@example.com', 'hashed_password3', '0654321987'); INSERT INTO cars (name, manufacturer, production_year, engine_type, price, description) VALUES ('Model S', 'Tesla', 2022, 'Électrique', 79999.99, 'Voiture électrique avec une grande autonomie.'), ('Golf 8', 'Volkswagen', 2021, 'Essence', 25000.50, 'Une berline compacte très appréciée.'), ('Civic', 'Honda', 2020, 'Hybride', 28000.00, 'Une voiture économique et fiable.'); INSERT INTO sale_ads (user_id, car_id, price, car_condition) VALUES (1, 1, 75000.00, 'Comme neuf'), (2, 2, 24000.00, 'Bon état'), (3, 3, 26000.00, 'Occasion récente'); INSERT INTO purchase_requests (user_id, car_id) VALUES (2, 1), (3, 2), (1, 3); INSERT INTO user_comments (user_id, car_id, comment) VALUES (1, 1, 'Super voiture, j’adore son autonomie !'), (2, 2, 'Très confortable et agréable à conduire.'), (3, 3, 'Bon rapport qualité/prix.'); INSERT INTO car_images (car_id, image_url) VALUES (1, 'https://example.com/images/tesla_model_s.jpg'), (2, 'https://example.com/images/vw_golf8.jpg'), (3, 'https://example.com/images/honda_civic.jpg'); INSERT INTO car_additional_info (car_id, technical_specs, description) VALUES (1, 'Autonomie : 600 km, Vitesse max : 250 km/h', 'Tesla Model S avec Autopilot'), (2, 'Moteur : 1.5 TSI, Puissance : 150 ch', 'Volkswagen Golf 8 avec transmission automatique'), (3, 'Moteur hybride, Consommation : 4.5 L/100 km', 'Honda Civic hybride avec intérieur premium.');
